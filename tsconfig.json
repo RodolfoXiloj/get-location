@@ -1,8 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES6",
     "module": "commonjs",
-    "sourceMap": true,
-    "outDir": "dist"
-  }
+    "outDir": "./dist",   // Archivo JavaScript transpilado irá aquí
+    "rootDir": "./",      // La raíz de tus archivos fuente
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
